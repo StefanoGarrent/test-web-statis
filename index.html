@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | IHC Survei Kepuasan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <nav id="main-nav" class="fixed w-full top-0 z-50 glass-effect backdrop-blur-xl border-b border-white/20 shadow-lg transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-ihc-blue rounded-[16px] flex items-center justify-center text-white shadow-lg glow-blue">
+                    <i class="ph-bold ph-heartbeat text-2xl"></i>
+                </div>
+                <div class="font-extrabold text-slate-800 text-2xl tracking-tight"><span class="text-ihc-blue">IHC</span> <span class="text-ihc-green">Survei</span></div>
+            </div>
+            <div class="space-x-2 md:space-x-3 flex">
+                <a href="index.html" class="px-5 py-2.5 rounded-[12px] bg-ihc-blue text-white font-bold flex items-center gap-2 transition hover:shadow-lg glow-blue active:scale-95">
+                    <i class="ph-fill ph-squares-four text-lg"></i> Dashboard
+                </a>
+                <a href="survei.html" class="px-5 py-2.5 rounded-[12px] text-slate-600 hover:bg-white/60 font-semibold flex items-center gap-2 transition hover-lift">
+                    <i class="ph ph-clipboard-text text-lg"></i> Survei
+                </a>
+                <a href="about.html" class="px-5 py-2.5 rounded-[12px] text-slate-600 hover:bg-white/60 font-semibold flex items-center gap-2 transition hover-lift">
+                    <i class="ph ph-info text-lg"></i> About
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center pt-32 pb-12 px-4 relative">
+        <section class="w-full max-w-5xl fade-in">
+            <!-- Header Section with Gradient Background -->
+            <div class="relative mb-8 p-10 md:p-14 bg-gradient-to-r from-ihc-blue via-ihc-blue-light to-ihc-teal text-white rounded-[2.5rem] shadow-xl overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="ph-fill ph-activity text-4xl"></i>
+                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Performa Layanan</h2>
+                    </div>
+                    <p class="text-white/80 text-lg flex items-center gap-2">
+                        <i class="ph-fill ph-check-circle text-2xl"></i> Data tersinkronisasi secara real-time
+                    </p>
+                </div>
+            </div>
+
+            <!-- Refresh Button -->
+            <div class="flex justify-end mb-8">
+                <button id="btn-refresh" onclick="loadDashboardData()" class="px-7 py-3 bg-white shadow-lg hover:shadow-xl active:scale-95 border-2 border-slate-200 hover:border-ihc-blue hover:bg-blue-50 hover:text-ihc-blue rounded-[14px] font-bold transition-all flex items-center gap-2 text-slate-700">
+                    <i class="ph-bold ph-arrows-clockwise text-xl"></i> Refresh Data
+                </button>
+            </div>
+
+            <!-- Stats Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Total Responden Card -->
+                <div class="bg-white p-8 rounded-[2rem] card-shadow hover-lift relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-ihc-blue/10 rounded-full group-hover:scale-110 transition duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-ihc-blue rounded-[16px] flex items-center justify-center mb-6 shadow-lg glow-blue">
+                            <i class="ph-fill ph-users text-white text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-slate-500 font-semibold mb-2 uppercase tracking-wider">Total Responden</p>
+                        <h3 id="statTotal" class="text-5xl font-extrabold text-slate-800 counter-animate">0</h3>
+                        <p class="text-xs text-slate-400 mt-3">Jumlah keseluruhan pasien</p>
+                    </div>
+                </div>
+
+                <!-- Pasien Puas Card -->
+                <div class="bg-white p-8 rounded-[2rem] card-shadow hover-lift relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-ihc-green/10 rounded-full group-hover:scale-110 transition duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-ihc-green rounded-[16px] flex items-center justify-center mb-6 shadow-lg glow-green">
+                            <i class="ph-fill ph-smiley text-white text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-slate-500 font-semibold mb-2 uppercase tracking-wider">Pasien Puas</p>
+                        <h3 id="statPuas" class="text-5xl font-extrabold text-slate-800 counter-animate">0</h3>
+                        <p class="text-xs text-slate-400 mt-3">Kepuasan sangat baik</p>
+                    </div>
+                </div>
+
+                <!-- Tidak Puas Card -->
+                <div class="bg-white p-8 rounded-[2rem] card-shadow hover-lift relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-orange-100/40 rounded-full group-hover:scale-110 transition duration-500"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-orange-500 rounded-[16px] flex items-center justify-center mb-6 shadow-lg" style="box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);">
+                            <i class="ph-fill ph-smiley-sad text-white text-3xl"></i>
+                        </div>
+                        <p class="text-sm text-slate-500 font-semibold mb-2 uppercase tracking-wider">Tidak Puas</p>
+                        <h3 id="statTidakPuas" class="text-5xl font-extrabold text-slate-800 counter-animate">0</h3>
+                        <p class="text-xs text-slate-400 mt-3">Perlu ditingkatkan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="bg-white rounded-[2rem] p-10 card-shadow shadow-lg">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="ph-fill ph-chart-pie text-ihc-blue"></i> Persentase Kepuasan
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-1">Grafik kepuasan pelanggan secara real-time</p>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-sm">
+                        <canvas id="kepuasanChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
