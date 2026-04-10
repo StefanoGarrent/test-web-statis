@@ -1,12 +1,8 @@
-// GANTI DENGAN URL APPS SCRIPT ANDA
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6Cf2AYo8IVs5DQU035Jo_CzepOW490P0TmCf_GdO_eD327jDpOJLIN6V5UZkHhXMN3w/exec';
 
 let currentUser = '';
 let chartInstance = null;
 
-// ==========================================
-// LOGIKA DASHBOARD (Hanya jalan di index.html)
-// ==========================================
 function loadDashboardData() {
     const chartCanvas = document.getElementById('kepuasanChart');
     if (!chartCanvas) return;
@@ -20,7 +16,6 @@ function loadDashboardData() {
     fetch(SCRIPT_URL)
     .then(response => response.json())
     .then(data => {
-        // Animate counter numbers
         animateCounter('statTotal', parseInt(data.total) || 0);
         animateCounter('statPuas', parseInt(data.puas) || 0);
         animateCounter('statTidakPuas', parseInt(data.tidakPuas) || 0);
@@ -29,25 +24,24 @@ function loadDashboardData() {
 
         if(btnRefresh) {
             btnRefresh.disabled = false;
-            btnRefresh.innerHTML = '<i class="ph-bold ph-arrows-clockwise text-lg"></i> Refresh Data';
+            btnRefresh.innerHTML = '<i class="ph-bold ph-arrows-clockwise text-lg"></i> Refresh';
         }
     })
     .catch(error => {
         console.error('Gagal memuat data:', error);
         if(btnRefresh) {
             btnRefresh.disabled = false;
-            btnRefresh.innerHTML = '<i class="ph ph-arrows-clockwise text-lg"></i> Refresh Data';
+            btnRefresh.innerHTML = '<i class="ph-bold ph-arrows-clockwise text-lg"></i> Refresh';
         }
     });
 }
 
-// Animate counter dengan efek smooth count-up
 function animateCounter(elementId, endValue) {
     const element = document.getElementById(elementId);
     if (!element) return;
 
     const startValue = 0;
-    const duration = 1500; // 1.5 detik
+    const duration = 1500;
     const steps = 60;
     const stepDuration = duration / steps;
     const increment = (endValue - startValue) / steps;
@@ -84,8 +78,8 @@ function renderChart(puas, tidakPuas) {
             labels: [`Sangat Puas (${puasPercentage}%)`, `Tidak Puas (${tidakPuasPercentage}%)`],
             datasets: [{
                 data: [puas, tidakPuas],
-                backgroundColor: ['#00C896', '#FF6B35'],
-                hoverBackgroundColor: ['#009B7F', '#FF5520'],
+                backgroundColor: ['#78BE20', '#F26522'],
+                hoverBackgroundColor: ['#5C9615', '#D95214'],
                 borderWidth: 3,
                 borderColor: '#ffffff',
                 hoverOffset: 12,
@@ -130,15 +124,11 @@ function renderChart(puas, tidakPuas) {
     });
 }
 
-// ==========================================
-// LOGIKA SURVEI (Hanya jalan di survei.html)
-// ==========================================
 function bukaLayarSurvei() {
     const inputElement = document.getElementById('namaPasien');
     const nama = inputElement.value.trim();
 
     if (nama === '') {
-        // Shake animation pada input
         inputElement.classList.add('animate-pulse');
         inputElement.focus();
         setTimeout(() => inputElement.classList.remove('animate-pulse'), 1000);
@@ -148,7 +138,6 @@ function bukaLayarSurvei() {
     currentUser = nama;
     document.getElementById('displayNama').innerText = currentUser;
 
-    // Sembunyikan dengan fade out, tampilkan dengan fade in
     document.getElementById('main-nav').classList.add('hidden');
     document.getElementById('section-input').classList.add('hidden');
 
@@ -172,14 +161,12 @@ function kirimSurvei(kepuasan) {
     .then(() => {
         loading.classList.add('hidden');
 
-        // Sembunyikan Survei, Tampilkan Terima Kasih dengan animasi
         document.getElementById('section-survey').classList.add('hidden');
 
         setTimeout(() => {
             document.getElementById('section-thankyou').classList.remove('hidden');
         }, 300);
 
-        // Otomatis kembali ke layar Kasir setelah 4 detik
         setTimeout(() => {
             document.getElementById('namaPasien').value = '';
             document.getElementById('section-thankyou').classList.add('hidden');
@@ -195,7 +182,6 @@ function kirimSurvei(kepuasan) {
     });
 }
 
-// Auto scroll untuk smooth navigation
 document.addEventListener('DOMContentLoaded', function() {
     const links = document.querySelectorAll('a[href*="#"]');
     links.forEach(link => {

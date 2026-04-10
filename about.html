@@ -6,42 +6,52 @@
     <title>About | IHC Survei Kepuasan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ihc-blue': '#00539C',
+                        'ihc-blue-light': '#3375B0',
+                        'ihc-green': '#78BE20',
+                        'ihc-teal': '#00A3E0',
+                        'ihc-orange': '#F26522'
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50">
+<body class="text-slate-800 min-h-screen flex flex-col bg-[#F4F7FE]">
 
-    <nav id="main-nav" class="fixed w-full top-0 z-50 glass-effect backdrop-blur-xl border-b border-white/20 shadow-lg transition-all duration-300">
+    <nav id="main-nav" class="fixed w-full top-0 z-50 glass-effect transition-all duration-300">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-ihc-blue rounded-[16px] flex items-center justify-center text-white shadow-lg glow-blue">
-                    <i class="ph-bold ph-heartbeat text-2xl"></i>
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-ihc-blue shadow-sm border border-slate-100">
+                    <i class="ph-bold ph-leaf text-2xl text-ihc-green"></i>
                 </div>
                 <div class="font-extrabold text-slate-800 text-2xl tracking-tight"><span class="text-ihc-blue">IHC</span> <span class="text-ihc-green">Survei</span></div>
             </div>
-            <div class="space-x-2 md:space-x-3 flex">
-                <a href="index.html" class="px-5 py-2.5 rounded-[12px] hover:bg-white/60 text-slate-600 font-bold flex items-center gap-2 transition hover-lift">
+            <div class="space-x-1 md:space-x-2 flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100">
+                <a href="index.html" class="px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold flex items-center gap-2 transition">
                     <i class="ph-fill ph-squares-four text-lg"></i> Dashboard
                 </a>
-                <a href="survei.html" class="px-5 py-2.5 rounded-[12px] hover:bg-white/60 text-slate-600 font-semibold flex items-center gap-2 transition hover-lift">
+                <a href="survei.html" class="px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold flex items-center gap-2 transition">
                     <i class="ph ph-clipboard-text text-lg"></i> Survei
                 </a>
-                <a href="about.html" class="px-5 py-2.5 rounded-[12px] bg-ihc-blue text-white font-bold flex items-center gap-2 transition hover:shadow-lg glow-blue active:scale-95">
+                <a href="about.html" class="px-5 py-2 rounded-xl bg-ihc-blue text-white font-semibold flex items-center gap-2 shadow-sm">
                     <i class="ph ph-info text-lg"></i> About
                 </a>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow flex items-center justify-center pt-28 pb-12 px-4 relative overflow-hidden">
-        <!-- Decorative Elements -->
-        <div class="absolute top-40 -left-32 w-64 h-64 bg-ihc-blue/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 -right-32 w-64 h-64 bg-ihc-green/10 rounded-full blur-3xl pointer-events-none"></div>
-
+    <main class="flex-grow flex items-center justify-center pt-32 pb-12 px-4 relative overflow-hidden">
         <section class="w-full max-w-2xl fade-in relative z-10">
-            <div class="bg-white rounded-[2.5rem] shadow-2xl border border-slate-200/60 overflow-hidden backdrop-blur-sm">
-                <!-- Header with Gradient -->
-                <div class="bg-gradient-to-r from-ihc-blue via-ihc-blue-light to-ihc-teal text-white p-10 md:p-14 text-center relative overflow-hidden">
+            <div class="bg-white rounded-[2rem] card-shadow border border-slate-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-ihc-blue via-[#0070c0] to-ihc-teal text-white p-10 md:p-14 text-center relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                     <div class="relative z-10">
                         <div class="inline-flex items-center justify-center w-20 h-20 rounded-[1.5rem] bg-white/20 text-white mb-6 shadow-lg border border-white/30">
@@ -52,90 +62,86 @@
                     </div>
                 </div>
 
-                <!-- Content -->
-                <div class="p-8 md:p-12 space-y-8">
-                    <!-- Version Info -->
-                    <div class="flex items-center gap-4 p-5 bg-gradient-to-r from-ihc-blue/10 to-ihc-green/10 rounded-[1.5rem] border border-ihc-blue/20">
+                <div class="p-8 md:p-12 space-y-10">
+                    <div class="flex items-center gap-4 p-5 bg-[#F4F7FE] rounded-[1.5rem] border border-slate-100">
                         <div class="flex-shrink-0">
                             <i class="ph-fill ph-star text-3xl text-amber-500"></i>
                         </div>
                         <div>
                             <p class="font-bold text-slate-800 text-lg">Versi 1.0</p>
-                            <p class="text-sm text-slate-600">Sistem Informasi Manajemen Kepuasan Pasien Rumah Sakit IHC</p>
+                            <p class="text-sm text-slate-500">Sistem Informasi Manajemen Kepuasan Pasien Rumah Sakit IHC</p>
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="ph-fill ph-lightbulb text-amber-500"></i> Tentang Aplikasi
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="ph-fill ph-lightbulb text-ihc-blue"></i> Tentang Aplikasi
                         </h3>
-                        <div class="bg-slate-50 p-8 rounded-[1.5rem] border border-slate-200 space-y-4 text-slate-700 leading-relaxed">
+                        <div class="bg-slate-50 p-6 rounded-[1.5rem] border border-slate-100 space-y-4 text-slate-600 leading-relaxed text-sm">
                             <p>Aplikasi IHC Survei dirancang khusus untuk Rumah Sakit IHC (Indonesia Healthcare Corporation) guna mengoptimalkan pengalaman pasien di bagian Kasir Rawat Jalan dengan pendekatan yang inovatif dan user-friendly.</p>
                             <p>Menggunakan arsitektur web statis modern yang responsif dan cepat, aplikasi ini terintegrasi langsung dengan <strong>Google Apps Script</strong> untuk sinkronisasi data real-time tanpa memerlukan server backend tradisional.</p>
                             <p>Setiap survei yang diisi pasien langsung tersimpan ke cloud dan dapat dipantau melalui dashboard analytics yang komprehensif untuk meningkatkan kualitas pelayanan.</p>
                         </div>
                     </div>
 
-                    <!-- Features -->
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="ph-fill ph-rocket text-ihc-blue"></i> Fitur Unggulan
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="ph-fill ph-rocket text-ihc-green"></i> Fitur Unggulan
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-6 bg-gradient-to-br from-blue-100 to-blue-50 rounded-[1.5rem] border border-blue-300 hover:shadow-lg transition">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <i class="ph-fill ph-lightning text-blue-700 text-2xl"></i>
-                                    <h4 class="font-bold text-slate-800">Respons Cepat</h4>
+                            <div class="p-5 bg-white rounded-[1.5rem] border border-blue-100 hover:shadow-md transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="ph-fill ph-lightning text-ihc-blue text-xl"></i>
+                                    <h4 class="font-bold text-slate-800 text-sm">Respons Cepat</h4>
                                 </div>
-                                <p class="text-sm text-slate-600">Interface yang ringan dan responsif untuk pengalaman pengguna terbaik</p>
+                                <p class="text-xs text-slate-500">Interface yang ringan dan responsif</p>
                             </div>
 
-                            <div class="p-6 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-[1.5rem] border border-emerald-300 hover:shadow-lg transition">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <i class="ph-fill ph-cloud text-emerald-700 text-2xl"></i>
-                                    <h4 class="font-bold text-slate-800">Cloud Sync</h4>
+                            <div class="p-5 bg-white rounded-[1.5rem] border border-green-100 hover:shadow-md transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="ph-fill ph-cloud text-ihc-green text-xl"></i>
+                                    <h4 class="font-bold text-slate-800 text-sm">Cloud Sync</h4>
                                 </div>
-                                <p class="text-sm text-slate-600">Sinkronisasi otomatis dengan Google Apps Script untuk data yang aman</p>
+                                <p class="text-xs text-slate-500">Sinkronisasi otomatis dengan aman</p>
                             </div>
 
-                            <div class="p-6 bg-gradient-to-br from-orange-100 to-orange-50 rounded-[1.5rem] border border-orange-300 hover:shadow-lg transition">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <i class="ph-fill ph-chart-line text-orange-700 text-2xl"></i>
-                                    <h4 class="font-bold text-slate-800">Analytics</h4>
+                            <div class="p-5 bg-orange-50/60 rounded-[1.5rem] border border-orange-200 hover:shadow-md transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="ph-fill ph-chart-line text-ihc-orange text-xl"></i>
+                                    <h4 class="font-bold text-slate-800 text-sm">Analytics</h4>
                                 </div>
-                                <p class="text-sm text-slate-600">Dashboard real-time untuk monitoring kepuasan pasien secara detail</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Dashboard real-time untuk monitoring kepuasan pasien secara detail</p>
                             </div>
 
-                            <div class="p-6 bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-[1.5rem] border border-cyan-300 hover:shadow-lg transition">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <i class="ph-fill ph-shield-check text-cyan-700 text-2xl"></i>
-                                    <h4 class="font-bold text-slate-800">Keamanan</h4>
+                            <div class="p-5 bg-cyan-50/60 rounded-[1.5rem] border border-cyan-200 hover:shadow-md transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <i class="ph-fill ph-shield-check text-cyan-600 text-xl"></i>
+                                    <h4 class="font-bold text-slate-800 text-sm">Keamanan</h4>
                                 </div>
-                                <p class="text-sm text-slate-600">Arsitektur tanpa server untuk keamanan dan privasi maksimal</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Arsitektur tanpa server untuk keamanan dan privasi maksimal</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Technology Stack -->
                     <div class="space-y-4">
                         <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
                             <i class="ph-fill ph-gear text-slate-600"></i> Teknologi
                         </h3>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="px-4 py-2 bg-ihc-blue/10 text-ihc-blue font-semibold rounded-full text-sm border border-ihc-blue/20">HTML5</span>
-                            <span class="px-4 py-2 bg-ihc-green/10 text-ihc-green font-semibold rounded-full text-sm border border-ihc-green/20">TailwindCSS</span>
-                            <span class="px-4 py-2 bg-amber-100 text-amber-800 font-semibold rounded-full text-sm border border-amber-200">JavaScript</span>
-                            <span class="px-4 py-2 bg-cyan-100 text-cyan-800 font-semibold rounded-full text-sm border border-cyan-200">Chart.js</span>
-                            <span class="px-4 py-2 bg-orange-100 text-orange-800 font-semibold rounded-full text-sm border border-orange-200">Google Apps Script</span>
-                            <span class="px-4 py-2 bg-purple-100 text-purple-800 font-semibold rounded-full text-sm border border-purple-200">Phosphor Icons</span>
+                        <div class="flex flex-wrap gap-3 mt-4">
+                            <span class="px-5 py-2.5 bg-white text-blue-600 font-semibold rounded-full text-sm border border-blue-200 shadow-sm">HTML5</span>
+                            <span class="px-5 py-2.5 bg-white text-emerald-600 font-semibold rounded-full text-sm border border-emerald-200 shadow-sm">TailwindCSS</span>
+                            <span class="px-5 py-2.5 bg-amber-50 text-amber-700 font-semibold rounded-full text-sm border border-amber-200">JavaScript</span>
+                            <span class="px-5 py-2.5 bg-cyan-50 text-cyan-700 font-semibold rounded-full text-sm border border-cyan-200">Chart.js</span>
+                            <span class="px-5 py-2.5 bg-orange-50 text-orange-700 font-semibold rounded-full text-sm border border-orange-200">Google Apps Script</span>
+                            <span class="px-5 py-2.5 bg-purple-50 text-purple-700 font-semibold rounded-full text-sm border border-purple-200">Phosphor Icons</span>
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="pt-8 border-t border-slate-200 text-center text-slate-500">
                         <p class="text-sm">© 2026 IHC Survei • Sistem Informasi Manajemen Kepuasan Pasien</p>
-                        <p class="text-xs mt-2">Dibuat dengan ❤️ untuk meningkatkan kualitas layanan kesehatan</p>
+                        <p class="text-sm mt-2 flex justify-center items-center gap-1">
+                            Dibuat dengan <span class="text-red-500 text-lg">❤️</span> untuk meningkatkan kualitas layanan kesehatan
+                        </p>
                     </div>
                 </div>
             </div>
