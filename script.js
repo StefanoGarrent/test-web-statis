@@ -2,7 +2,11 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6Cf2AYo8IVs5DQU035
 
 let currentUser = '';
 let chartInstance = null;
+let isQrMode = false; // Penanda apakah aplikasi dibuka lewat scan HP Pasien
 
+// ==========================================
+// LOGIKA DASHBOARD (index.html)
+// ==========================================
 function loadDashboardData() {
     const chartCanvas = document.getElementById('kepuasanChart');
     if (!chartCanvas) return;
@@ -89,43 +93,18 @@ function renderChart(puas, tidakPuas) {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            family: "'Plus Jakarta Sans', sans-serif",
-                            size: 14,
-                            weight: '600'
-                        },
-                        color: '#475569',
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: { size: 14, weight: 'bold' },
-                    bodyFont: { size: 13 },
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    borderWidth: 1,
-                    displayColors: true,
-                    callbacks: {
-                        label: function(context) {
-                            return context.label + ': ' + context.parsed + ' responden';
-                        }
-                    }
-                }
-            },
             cutout: '70%'
         }
     });
 }
 
+// ==========================================
+// LOGIKA SURVEI & QR CODE (survei.html)
+// ==========================================
 function bukaLayarSurvei() {
     const inputElement = document.getElementById('namaPasien');
+    if(!inputElement) return;
+
     const nama = inputElement.value.trim();
 
     if (nama === '') {
@@ -146,6 +125,63 @@ function bukaLayarSurvei() {
     }, 200);
 }
 
+function generateQRCode() {
+    const inputElement = document.getElementById('namaPasien');
+    if(!inputElement) return;
+
+    const nama = inputElement.value.trim();
+
+    // Validasi input kosong
+    if (nama === '') {
+        alert("Mohon masukkan nama pasien terlebih dahulu!");
+        inputElement.classList.add('animate-pulse');
+        inputElement.focus();
+        setTimeout(() => inputElement.classList.remove('animate-pulse'), 1000);
+        return;
+    }
+
+    // Validasi Library QR
+    if (typeof QRious === 'undefined') {
+        alert("Gagal memuat sistem QR. Pastikan koneksi internet aktif untuk memuat library QRious.");
+        return;
+    }
+
+    const qrContainer = document.getElementById('qr-container');
+    const qrCanvas = document.getElementById('qr-canvas');
+    
+    // Tampilkan Container QR
+    qrContainer.classList.remove('hidden');
+
+    // Dapatkan URL saat ini (tanpa parameter query lama)
+    const baseUrl = window.location.href.split('?')[0];
+    
+    // Peringatan jika dijalankan secara lokal (HP pasien tidak akan bisa mengakses file://)
+    if(baseUrl.startsWith('file://')) {
+        alert("PERHATIAN: Anda membuka file lokal (file://). QR Code akan terbuat, tapi HP pasien tidak akan bisa membukanya. Aplikasi harus di-hosting terlebih dahulu.");
+    }
+
+    const surveyUrl = `${baseUrl}?nama=${encodeURIComponent(nama)}`;
+
+    // Generate ulang QR Code di Canvas
+    new QRious({
+        element: qrCanvas,
+        value: surveyUrl,
+        size: 220,
+        background: 'white',
+        foreground: '#00539C' // Warna Biru IHC
+    });
+
+    // Scroll otomatis ke bawah agar kasir bisa langsung melihat QR
+    qrContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetKasir() {
+    // Fungsi manual untuk kasir mengembalikan layar ke awal
+    document.getElementById('namaPasien').value = '';
+    document.getElementById('qr-container').classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function kirimSurvei(kepuasan) {
     const loading = document.getElementById('loadingIndicator');
     loading.classList.remove('hidden');
@@ -160,19 +196,41 @@ function kirimSurvei(kepuasan) {
     })
     .then(() => {
         loading.classList.add('hidden');
-
         document.getElementById('section-survey').classList.add('hidden');
+        
+        const thankyouContent = document.getElementById('thankyou-content');
 
-        setTimeout(() => {
+        if (isQrMode) {
+            // MODE HP PASIEN: Berhenti di sini, tidak ada tombol kembali
+            thankyouContent.innerHTML = `
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-blue/10 text-ihc-blue mb-6">
+                    <i class="ph-fill ph-check-circle text-6xl"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Selesai</h2>
+                <p class="text-slate-500 font-medium leading-relaxed">Terima kasih atas penilaian Anda. Anda dapat menutup halaman ini sekarang.</p>
+            `;
             document.getElementById('section-thankyou').classList.remove('hidden');
-        }, 300);
+        } else {
+            // MODE DEVICE KASIR: Muncul terima kasih lalu otomatis kembali
+            thankyouContent.innerHTML = `
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-green/10 text-ihc-green mb-6">
+                    <i class="ph-fill ph-check-circle text-6xl"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Terima Kasih!</h2>
+                <p class="text-slate-500 font-medium leading-relaxed mb-8">Tanggapan Anda sangat berharga bagi peningkatan layanan kami.</p>
+                <p class="text-xs font-semibold text-slate-400 flex items-center justify-center gap-2">
+                    <i class="ph ph-spinner animate-spin"></i> Kembali ke awal...
+                </p>
+            `;
+            document.getElementById('section-thankyou').classList.remove('hidden');
 
-        setTimeout(() => {
-            document.getElementById('namaPasien').value = '';
-            document.getElementById('section-thankyou').classList.add('hidden');
-            document.getElementById('section-input').classList.remove('hidden');
-            document.getElementById('main-nav').classList.remove('hidden');
-        }, 4000);
+            setTimeout(() => {
+                document.getElementById('namaPasien').value = '';
+                document.getElementById('section-thankyou').classList.add('hidden');
+                document.getElementById('section-input').classList.remove('hidden');
+                document.getElementById('main-nav').classList.remove('hidden');
+            }, 3000);
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -182,6 +240,39 @@ function kirimSurvei(kepuasan) {
     });
 }
 
+// ==========================================
+// INITIALIZATION PADA SAAT LOAD HALAMAN
+// ==========================================
+window.onload = () => {
+    // 1. Cek Parameter URL (Untuk mendeteksi mode HP pasien)
+    const urlParams = new URLSearchParams(window.location.search);
+    const namaDariUrl = urlParams.get('nama');
+    
+    if (namaDariUrl) {
+        // JIKA ADA PARAMETER NAMA -> Buka mode HP Pasien
+        isQrMode = true;
+        currentUser = decodeURIComponent(namaDariUrl);
+        
+        const displayElem = document.getElementById('displayNama');
+        if (displayElem) displayElem.innerText = currentUser;
+
+        // Sembunyikan Navigasi & Form Kasir
+        const mainNav = document.getElementById('main-nav');
+        const sectionInput = document.getElementById('section-input');
+        const sectionSurvey = document.getElementById('section-survey');
+        
+        if (mainNav) mainNav.classList.add('hidden');
+        if (sectionInput) sectionInput.classList.add('hidden');
+        
+        // Langsung tampilkan layar survei
+        if (sectionSurvey) sectionSurvey.classList.remove('hidden');
+    } else {
+        // JIKA TIDAK ADA -> Ini adalah mode Kasir, muat data dashboard jika di index.html
+        loadDashboardData();
+    }
+};
+
+// Smooth Scroll Navigation
 document.addEventListener('DOMContentLoaded', function() {
     const links = document.querySelectorAll('a[href*="#"]');
     links.forEach(link => {
@@ -197,7 +288,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-window.onload = () => {
-    loadDashboardData();
-};
