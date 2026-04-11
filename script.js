@@ -1,8 +1,9 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6Cf2AYo8IVs5DQU035Jo_CzepOW490P0TmCf_GdO_eD327jDpOJLIN6V5UZkHhXMN3w/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBmezYSw9fZVvgdIkSaDRXkfZFe9rfhjJevNsARVIUk5fFwDiOjeHtkp0yEGmzSsd3oQ/exec';
 
 let currentUser = '';
 let chartInstance = null;
-let isQrMode = false; // Penanda apakah aplikasi dibuka lewat scan HP Pasien
+let isQrMode = false; 
+let pollingInterval = null; // Variabel penampung interval pengecekan real-time
 
 // ==========================================
 // LOGIKA DASHBOARD (index.html)
@@ -131,7 +132,6 @@ function generateQRCode() {
 
     const nama = inputElement.value.trim();
 
-    // Validasi input kosong
     if (nama === '') {
         alert("Mohon masukkan nama pasien terlebih dahulu!");
         inputElement.classList.add('animate-pulse');
@@ -140,43 +140,74 @@ function generateQRCode() {
         return;
     }
 
-    // Validasi Library QR
     if (typeof QRious === 'undefined') {
-        alert("Gagal memuat sistem QR. Pastikan koneksi internet aktif untuk memuat library QRious.");
+        alert("Gagal memuat sistem QR. Pastikan koneksi internet aktif.");
         return;
     }
 
     const qrContainer = document.getElementById('qr-container');
     const qrCanvas = document.getElementById('qr-canvas');
-    
-    // Tampilkan Container QR
     qrContainer.classList.remove('hidden');
 
-    // Dapatkan URL saat ini (tanpa parameter query lama)
     const baseUrl = window.location.href.split('?')[0];
-    
-    // Peringatan jika dijalankan secara lokal (HP pasien tidak akan bisa mengakses file://)
-    if(baseUrl.startsWith('file://')) {
-        alert("PERHATIAN: Anda membuka file lokal (file://). QR Code akan terbuat, tapi HP pasien tidak akan bisa membukanya. Aplikasi harus di-hosting terlebih dahulu.");
-    }
-
     const surveyUrl = `${baseUrl}?nama=${encodeURIComponent(nama)}`;
 
-    // Generate ulang QR Code di Canvas
     new QRious({
         element: qrCanvas,
         value: surveyUrl,
         size: 220,
         background: 'white',
-        foreground: '#00539C' // Warna Biru IHC
+        foreground: '#00539C' 
     });
 
-    // Scroll otomatis ke bawah agar kasir bisa langsung melihat QR
     qrContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // === MULAI PROSES POLLING (MENGECEK OTOMATIS) ===
+    if (pollingInterval) clearInterval(pollingInterval); // Hapus interval lama jika ada
+    
+    // Mengecek ke Google Sheet setiap 4 detik (4000ms) untuk mencegah limit kuota
+    pollingInterval = setInterval(() => {
+        fetch(`${SCRIPT_URL}?action=check&nama=${encodeURIComponent(nama)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'selesai') {
+                    // Jika pasien sudah mengisi di HP, otomatis reset layar kasir
+                    clearInterval(pollingInterval);
+                    tampilkanSuksesKasirOtomatis();
+                }
+            })
+            .catch(err => console.error("Gagal polling:", err));
+    }, 4000);
+}
+
+// Menampilkan sukses di layar kasir saat polling mendeteksi pasien selesai
+function tampilkanSuksesKasirOtomatis() {
+    document.getElementById('section-input').classList.add('hidden');
+    
+    const thankyouContent = document.getElementById('thankyou-content');
+    thankyouContent.innerHTML = `
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-green/10 text-ihc-green mb-6">
+            <i class="ph-fill ph-check-circle text-6xl"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Pasien Selesai!</h2>
+        <p class="text-slate-500 font-medium leading-relaxed mb-8">Data telah otomatis masuk ke sistem.</p>
+        <p class="text-xs font-semibold text-slate-400 flex items-center justify-center gap-2">
+            Kembali ke awal dalam beberapa detik...
+        </p>
+    `;
+    
+    document.getElementById('section-thankyou').classList.remove('hidden');
+
+    // Reset dan kembali ke form input kasir setelah 3 detik
+    setTimeout(() => {
+        resetKasir();
+        document.getElementById('section-thankyou').classList.add('hidden');
+        document.getElementById('section-input').classList.remove('hidden');
+    }, 3000);
 }
 
 function resetKasir() {
-    // Fungsi manual untuk kasir mengembalikan layar ke awal
+    if (pollingInterval) clearInterval(pollingInterval); // Matikan polling
     document.getElementById('namaPasien').value = '';
     document.getElementById('qr-container').classList.add('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -201,7 +232,7 @@ function kirimSurvei(kepuasan) {
         const thankyouContent = document.getElementById('thankyou-content');
 
         if (isQrMode) {
-            // MODE HP PASIEN: Berhenti di sini, tidak ada tombol kembali
+            // MODE HP PASIEN: Berhenti di sini
             thankyouContent.innerHTML = `
                 <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-blue/10 text-ihc-blue mb-6">
                     <i class="ph-fill ph-check-circle text-6xl"></i>
@@ -211,7 +242,7 @@ function kirimSurvei(kepuasan) {
             `;
             document.getElementById('section-thankyou').classList.remove('hidden');
         } else {
-            // MODE DEVICE KASIR: Muncul terima kasih lalu otomatis kembali
+            // MODE DEVICE KASIR: Kembali ke form
             thankyouContent.innerHTML = `
                 <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-green/10 text-ihc-green mb-6">
                     <i class="ph-fill ph-check-circle text-6xl"></i>
@@ -225,7 +256,7 @@ function kirimSurvei(kepuasan) {
             document.getElementById('section-thankyou').classList.remove('hidden');
 
             setTimeout(() => {
-                document.getElementById('namaPasien').value = '';
+                resetKasir();
                 document.getElementById('section-thankyou').classList.add('hidden');
                 document.getElementById('section-input').classList.remove('hidden');
                 document.getElementById('main-nav').classList.remove('hidden');
@@ -244,47 +275,26 @@ function kirimSurvei(kepuasan) {
 // INITIALIZATION PADA SAAT LOAD HALAMAN
 // ==========================================
 window.onload = () => {
-    // 1. Cek Parameter URL (Untuk mendeteksi mode HP pasien)
     const urlParams = new URLSearchParams(window.location.search);
     const namaDariUrl = urlParams.get('nama');
     
     if (namaDariUrl) {
-        // JIKA ADA PARAMETER NAMA -> Buka mode HP Pasien
+        // MODE HP PASIEN
         isQrMode = true;
         currentUser = decodeURIComponent(namaDariUrl);
         
         const displayElem = document.getElementById('displayNama');
         if (displayElem) displayElem.innerText = currentUser;
 
-        // Sembunyikan Navigasi & Form Kasir
         const mainNav = document.getElementById('main-nav');
         const sectionInput = document.getElementById('section-input');
         const sectionSurvey = document.getElementById('section-survey');
         
         if (mainNav) mainNav.classList.add('hidden');
         if (sectionInput) sectionInput.classList.add('hidden');
-        
-        // Langsung tampilkan layar survei
         if (sectionSurvey) sectionSurvey.classList.remove('hidden');
     } else {
-        // JIKA TIDAK ADA -> Ini adalah mode Kasir, muat data dashboard jika di index.html
+        // MODE KASIR
         loadDashboardData();
     }
 };
-
-// Smooth Scroll Navigation
-document.addEventListener('DOMContentLoaded', function() {
-    const links = document.querySelectorAll('a[href*="#"]');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
-    });
-});
