@@ -131,3 +131,12 @@ select:focus {
 .glow-green {
     box-shadow: 0 8px 20px rgba(120, 190, 32, 0.3);
 }
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

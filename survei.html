@@ -25,33 +25,33 @@
 <body class="text-slate-800 min-h-screen flex flex-col bg-[#F4F7FE]">
 
     <nav id="main-nav" class="fixed w-full top-0 z-50 glass-effect transition-all duration-300">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between sm:items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100">
                     <i class="ph-bold ph-leaf text-2xl text-ihc-green"></i>
                 </div>
-                <div class="font-extrabold text-slate-800 text-2xl tracking-tight"><span class="text-ihc-blue">IHC</span> <span class="text-ihc-green">Survei</span></div>
+                <div class="font-extrabold text-slate-800 text-xl md:text-2xl tracking-tight"><span class="text-ihc-blue">IHC</span> <span class="text-ihc-green">Survei</span></div>
             </div>
-            <div class="space-x-1 flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100">
-                <a href="index.html" class="px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold flex items-center gap-2 transition">
+            <div class="w-full sm:w-auto flex gap-1 md:gap-2 bg-white p-1 rounded-2xl shadow-sm border border-slate-100 overflow-x-auto no-scrollbar">
+                <a href="index.html" class="px-3 md:px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold text-sm md:text-base flex items-center gap-2 transition whitespace-nowrap shrink-0">
                     <i class="ph-fill ph-squares-four text-lg"></i> Dashboard
                 </a>
-                <a href="survei.html" class="px-5 py-2 rounded-xl bg-ihc-blue text-white font-semibold flex items-center gap-2 shadow-sm">
+                <a href="survei.html" class="px-3 md:px-5 py-2 rounded-xl bg-ihc-blue text-white font-semibold text-sm md:text-base flex items-center gap-2 shadow-sm whitespace-nowrap shrink-0">
                     <i class="ph ph-clipboard-text text-lg"></i> Survei
                 </a>
-                <a href="about.html" class="px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold flex items-center gap-2 transition">
+                <a href="about.html" class="px-3 md:px-5 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold text-sm md:text-base flex items-center gap-2 transition whitespace-nowrap shrink-0">
                     <i class="ph ph-info text-lg"></i> About
                 </a>
             </div>
         </div>
     </nav>
 
-    <main class="min-h-screen flex items-center justify-center px-4 py-20 relative">
+    <main class="min-h-screen flex items-center justify-center px-4 pt-44 sm:pt-32 pb-12 relative">
 
         <div class="relative z-10 w-full max-w-4xl">
-            <section id="section-input" class="w-full max-w-md mx-auto p-10 bg-white rounded-[2rem] card-shadow border border-slate-100 fade-in">
+            <section id="section-input" class="w-full max-w-md mx-auto p-6 md:p-10 bg-white rounded-[2rem] card-shadow border border-slate-100 fade-in">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-extrabold text-slate-800 mb-2">Identifikasi Pasien</h1>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-2">Identifikasi Pasien</h1>
                     <p class="text-sm text-slate-500">Masukkan nama pasien untuk memulai survei.</p>
                 </div>
                 <div class="space-y-6">
@@ -70,22 +70,22 @@
 
             <section id="section-survey" class="hidden w-full max-w-4xl fade-in mx-auto">
                 <div class="bg-white rounded-[2rem] card-shadow overflow-hidden border border-slate-100">
-                    <div class="bg-ihc-blue text-white p-12 text-center relative">
-                        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Halo, <span id="displayNama" class="text-ihc-green">Pasien</span>!</h2>
-                        <p class="text-white/90 text-xl font-medium">Bagaimana pengalaman Anda dengan layanan Kasir IHC Rawat Jalan hari ini?</p>
+                    <div class="bg-ihc-blue text-white p-6 md:p-12 text-center relative">
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-4">Halo, <span id="displayNama" class="text-ihc-green">Pasien</span>!</h2>
+                        <p class="text-white/90 text-base md:text-xl font-medium">Bagaimana pengalaman Anda dengan layanan Kasir IHC Rawat Jalan hari ini?</p>
                     </div>
 
-                    <div class="p-10 md:p-14">
+                    <div class="p-6 md:p-14">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <button onclick="kirimSurvei('Puas')" class="flex flex-col items-center justify-center p-12 bg-gradient-to-b from-white to-ihc-green/5 border-2 border-slate-100 hover:border-ihc-green rounded-[2rem] transition-all duration-300 group shadow-sm hover:shadow-lg">
-                                <i class="ph-fill ph-smiley text-8xl text-ihc-green mb-4 group-hover:scale-110 transition-transform"></i>
-                                <span class="text-3xl font-extrabold text-slate-800">Sangat Puas</span>
+                            <button onclick="kirimSurvei('Puas')" class="flex flex-col items-center justify-center p-8 md:p-12 bg-gradient-to-b from-white to-ihc-green/5 border-2 border-slate-100 hover:border-ihc-green rounded-[2rem] transition-all duration-300 group shadow-sm hover:shadow-lg">
+                                <i class="ph-fill ph-smiley text-7xl md:text-8xl text-ihc-green mb-4 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-2xl md:text-3xl font-extrabold text-slate-800">Sangat Puas</span>
                                 <p class="text-slate-500 font-medium mt-2">Layanan memuaskan</p>
                             </button>
 
-                            <button onclick="kirimSurvei('Tidak Puas')" class="flex flex-col items-center justify-center p-12 bg-gradient-to-b from-white to-ihc-orange/5 border-2 border-slate-100 hover:border-ihc-orange rounded-[2rem] transition-all duration-300 group shadow-sm hover:shadow-lg">
-                                <i class="ph-fill ph-smiley-sad text-8xl text-ihc-orange mb-4 group-hover:scale-110 transition-transform"></i>
-                                <span class="text-3xl font-extrabold text-slate-800">Tidak Puas</span>
+                            <button onclick="kirimSurvei('Tidak Puas')" class="flex flex-col items-center justify-center p-8 md:p-12 bg-gradient-to-b from-white to-ihc-orange/5 border-2 border-slate-100 hover:border-ihc-orange rounded-[2rem] transition-all duration-300 group shadow-sm hover:shadow-lg">
+                                <i class="ph-fill ph-smiley-sad text-7xl md:text-8xl text-ihc-orange mb-4 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-2xl md:text-3xl font-extrabold text-slate-800">Tidak Puas</span>
                                 <p class="text-slate-500 font-medium mt-2">Perlu ditingkatkan</p>
                             </button>
                         </div>
@@ -98,7 +98,7 @@
             </section>
 
             <section id="section-thankyou" class="hidden w-full max-w-md mx-auto fade-in">
-                <div class="bg-white rounded-[2rem] card-shadow border border-slate-100 p-12 text-center">
+                <div class="bg-white rounded-[2rem] card-shadow border border-slate-100 p-8 md:p-12 text-center">
                     <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ihc-green/10 text-ihc-green mb-6">
                         <i class="ph-fill ph-check-circle text-6xl"></i>
                     </div>
